@@ -1,0 +1,8 @@
+import{useEffect,useState}from"react";
+const seed=[{id:1,title:"Complete DBMS assignment",subject:"DBMS",done:false},{id:2,title:"Revise Docker commands",subject:"DevOps",done:true}];
+export default function App(){const[tasks,setTasks]=useState(()=>JSON.parse(localStorage.getItem("tasks"))||seed),[title,setTitle]=useState(""),[subject,setSubject]=useState("");
+useEffect(()=>localStorage.setItem("tasks",JSON.stringify(tasks)),[tasks]);
+function add(e){e.preventDefault();if(!title.trim()||!subject.trim())return;setTasks([...tasks,{id:Date.now(),title,subject,done:false}]);setTitle("");setSubject("")}
+return <main><header><p>DEVOPS MINI PROJECT</p><h1>Student Task Manager</h1><span>{tasks.filter(t=>t.done).length}/{tasks.length} completed</span></header>
+<section><h2>Add Task</h2><form onSubmit={add}><input placeholder="Task title" value={title} onChange={e=>setTitle(e.target.value)}/><input placeholder="Subject" value={subject} onChange={e=>setSubject(e.target.value)}/><button>Add Task</button></form></section>
+<section><h2>My Tasks</h2>{tasks.map(t=><article key={t.id} className={t.done?"done":""}><input type="checkbox" checked={t.done} onChange={()=>setTasks(tasks.map(x=>x.id===t.id?{...x,done:!x.done}:x))}/><div><b>{t.title}</b><small>{t.subject}</small></div><button className="del" onClick={()=>setTasks(tasks.filter(x=>x.id!==t.id))}>Delete</button></article>)}</section></main>}
